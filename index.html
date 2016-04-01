@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Tanayvarma.GitHub.io by tanayvarma</title>
+    <title>ProBurst by tanayvarma</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,23 +11,55 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Tanayvarma.GitHub.io</h1>
-      <h2 class="project-tagline">Project Proposal Site</h2>
+      <h1 class="project-name">ProBurst</h1>
+      <h2 class="project-tagline">Android Application to Detect Best Images in a Burst</h2>
     </section>
 
     <section class="main-content">
-      <p><img src="https://41.media.tumblr.com/c20afa658a990cef0635af974185642b/tumblr_o4ytm4CNc41vqq9vno1_540.jpg" alt="stack Overflow"> Welcome to GitHub Pages.
-This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
+      <p><img src="https://41.media.tumblr.com/c20afa658a990cef0635af974185642b/tumblr_o4ytm4CNc41vqq9vno1_540.jpg" alt="stack Overflow"> </p>
 
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
+<h1>
+<a id="summary" class="anchor" href="#summary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary</h1>
 
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
+<p>We are going to create an Android application that efficiently uses the parallel processing capabilities of an Android-based machine’s GPU to rapidly perform parallel image analysis on a burst . </p>
 
-<h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<h1>
+<a id="background" class="anchor" href="#background" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Background</h1>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>We are interested in creating an application that can simplify and accelerate the process of selecting the best image from a burst. Specifically, a burst contains a large number of images and it is often cumbersome to sift through all the images to find the best one. Our application aims to detect the images with the highest rate of people with eyes open and smiling. If none of the images completely match all the parameters, then our application will create a composite image i.e. stitching together an image - from the entire library of burst - where everyone is smiling with their eyes open.</p>
+
+<p><img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/12910529_1735977119956073_188343880_n.png" alt="Photo Burst"></p>
+
+<p>A sequential version of the application has several bottlenecks: </p>
+
+<ol>
+<li>Serial analysis and execution of each image in the burst will be extremely slow as there is a large number of photographs in burst.  We aim to provide a near real-time solution to the problem. </li>
+</ol>
+
+<p><img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p1.png" alt="s1">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p2.png" alt="s2">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p3.png" alt="s3"></p>
+
+<ol>
+<li><p>Sequentially analyzing each image for face and eye detection will be extremely slow, and applying a serial vision algorithm to all the images in the burst would take a long time and a lot of processing power. </p></li>
+<li><p>Creating the composite image sequentially will be a bottleneck in the runtime of this application. </p></li>
+<li><p>Most importantly, a sequential version of the whole application will not be able to benefit from the machine’s GPU power and will also slow down the CPU as it will perform a lot of tasks on the latter. </p></li>
+</ol>
+
+<p>Therefore, all the aforementioned aspects of the application can be significantly improved from parallelism. We plan to use OpenCL (Android’s version of CUDA) to exploit parallelism in the multi-core chip. The benefits of a parallel application be better understood using the following illustrations highlighting the difference between the sequential and parallel versions.     </p>
+
+<h1>
+<a id="the-challenge" class="anchor" href="#the-challenge" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Challenge</h1>
+
+<p>The application is challenging in a number of ways: </p>
+
+<ol>
+<li><p>OpenCL is written in C/C++ whereas Android applications are written in Java. As we plan to make our code highly parallelizable to specific machines (fully exploiting our knowledge of the chips), we will have to compile C++ OpenCL code in our Java code.</p></li>
+<li><p>As a burst contains a large number of images, there will be a high amount of memory accesses. This implies that a lot will depend on making sure that the computation-to-communication ratio is high. To ensure that the computation-to-communication ratio is high, we will need to handle cache optimizations of image data well in order to achieve maximum cache hits. </p></li>
+<li><p>Efficiently detecting facial features is a lot more than simply sending different parts of the image to different cores; we will have to make sure that distribution of work is even and handle cases that require high computation with more processing power. </p></li>
+<li><p>Stitching together an image will require a lot of inter-communication between processes and more processing power, which means that we will need to dynamically handle parallel processing of the code based not only on the dataset (burst) but also on what the algorithm is working on – eye detection, smile detection, stitching, etc. </p></li>
+<li><p>During the analysis of each image, our application will perform numerous checks to see if the input meets some requirements. A high number of ‘if’ statements might cause divergent control flow execution, which will need to be handled in way that it does not affect accuracy at the cost of speedup. </p></li>
+</ol>
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
