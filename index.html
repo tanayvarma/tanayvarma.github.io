@@ -16,9 +16,7 @@
     </section>
 
     <section class="main-content">
-      <p><img src="https://41.media.tumblr.com/c20afa658a990cef0635af974185642b/tumblr_o4ytm4CNc41vqq9vno1_540.jpg" alt="stack Overflow"> </p>
-
-<h1>
+      <h1>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary</h1>
 
 <p>We are going to create an Android application that efficiently uses the parallel processing capabilities of an Android-based machine’s GPU to rapidly perform parallel image analysis on a burst . </p>
@@ -28,25 +26,24 @@
 
 <p>We are interested in creating an application that can simplify and accelerate the process of selecting the best image from a burst. Specifically, a burst contains a large number of images and it is often cumbersome to sift through all the images to find the best one. Our application aims to detect the images with the highest rate of people with eyes open and smiling. If none of the images completely match all the parameters, then our application will create a composite image i.e. stitching together an image - from the entire library of burst - where everyone is smiling with their eyes open.</p>
 
-<p><img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/12910529_1735977119956073_188343880_n.png?raw=true" alt="Photo Burst"></p>
-
 <p>A sequential version of the application has several bottlenecks: </p>
 
 <ol>
-<li>Serial analysis and execution of each image in the burst will be extremely slow as there is a large number of photographs in burst.  We aim to provide a near real-time solution to the problem. </li>
-</ol>
-
-<p><img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p1.png" alt="s1">
-<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p2.png" alt="s2">
-<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p3.png" alt="s3"></p>
-
-<ol>
+<li><p>Serial analysis and execution of each image in the burst will be extremely slow as there is a large number of photographs in burst.  We aim to provide a near real-time solution to the problem. </p></li>
 <li><p>Sequentially analyzing each image for face and eye detection will be extremely slow, and applying a serial vision algorithm to all the images in the burst would take a long time and a lot of processing power. </p></li>
 <li><p>Creating the composite image sequentially will be a bottleneck in the runtime of this application. </p></li>
 <li><p>Most importantly, a sequential version of the whole application will not be able to benefit from the machine’s GPU power and will also slow down the CPU as it will perform a lot of tasks on the latter. </p></li>
 </ol>
 
 <p>Therefore, all the aforementioned aspects of the application can be significantly improved from parallelism. We plan to use OpenCL (Android’s version of CUDA) to exploit parallelism in the multi-core chip. The benefits of a parallel application be better understood using the following illustrations highlighting the difference between the sequential and parallel versions.     </p>
+
+<p><img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/q.jpg" alt="Photo Burst">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p1.jpg" alt="s1">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p2.jpg" alt="s2">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p3.gpg" alt="s3">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p4.jpg" alt="s1">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p5.jpg" alt="s2">
+<img src="https://github.com/tanayvarma/tanayvarma.github.io/blob/master/p6.gpg" alt="s3"></p>
 
 <h1>
 <a id="the-challenge" class="anchor" href="#the-challenge" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Challenge</h1>
