@@ -80,6 +80,13 @@
 <p>We will be using an Android smartphone with support for OpenCL to create an end-to-end demo. There are a few techniques that are used in Computer Vision to detect facial features, and we aim to parallelize those techniques as well (see References). </p>
 
 <h1>
+<a id="goals-and-deliverables" class="anchor" href="#goals-and-deliverables" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Goals and Deliverables</h1>
+
+<p>We plan to achieve a highly efficient and working Android application fully capable of detecting and creating new images from a burst. We also plan to achieve a high speedup from the sequential versions of Computer Vision algorithms we will use. </p>
+
+<p>We plan to present an interactive demo at the presentation day, running the application live with an existing set of bursts, and showcasing different functionalities of the app. In addition, we also plan to showcase speedup graphs of the parallel version of the application versus the serial version. </p>
+
+<h1>
 <a id="stretch-goal" class="anchor" href="#stretch-goal" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stretch Goal</h1>
 
 <p>We will further try to perform a quick image classification by parallelizing the popular 'Bag of Visual Words' algorithm. This Image classification can then be used to modify heuristics for detecting relevant image features and stitching.</p>
@@ -88,6 +95,30 @@
 <a id="generic-bag-of-visual-words-algorithm" class="anchor" href="#generic-bag-of-visual-words-algorithm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generic 'Bag of Visual Words' Algorithm:</h3>
 
 <p><img src="http://cs.brown.edu/courses/cs143/proj3/header.png" alt="p6"></p>
+
+<h1>
+<a id="platform" class="anchor" href="#platform" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Platform</h1>
+
+<p>We will be using Android as burst is usually taken from smartphones, and Android has a wide variety of open libraries to make full use of its GPU’s processing power. In addition, we will be using OpenCL, which is the same as CUDA for Android to process image analysis at a high speed. </p>
+
+<h1>
+<a id="schedule" class="anchor" href="#schedule" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Schedule</h1>
+
+<p>March 28 – April 1, 2016: Decide on a project idea and complete project proposal</p>
+
+<p>April 1 – April 3, 2016: Setup the working environment (Android phone, OpenCL)</p>
+
+<p>April 4 – April 11, 2016: Create a sequential application and test main functionality </p>
+
+<p>April 12 – April 20, 2016: Work on parallel implementation </p>
+
+<p>April 25 – April 30, 2016: Perform Testing, develop heuristics, and improve parallelism </p>
+
+<p>May 3 – May 6, 2016: If all goes as planned, implement Machine Learning (Stretch Goal) parallel algorithm </p>
+
+<p>May 7 – May 8, 2016: Final application testing </p>
+
+<p>May 9, 2016: Final report and presentation </p>
 
 <h3>
 <a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h3>
