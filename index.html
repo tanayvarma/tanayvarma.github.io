@@ -12,30 +12,30 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">Paraβurst </h1>
-      <h2 class="project-tagline">An Android Application to Detect and Create Best Images from a Burst</h2>
+      <h2 class="project-tagline">An Application to Detect and Create Best Images from a Burst</h2>
     </section>
 
     <section class="main-content">
       <h1>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary</h1>
 
-<p>We are going to create an Android application that efficiently uses the parallel processing capabilities of an Android-based machine’s GPU to rapidly perform parallel image analysis on a burst - several photographs captured in quick succession. </p>
+<p>We are going to create a C++ based application that efficiently uses the parallel processing capabilities of a machine’s GPU to rapidly perform parallel image analysis on a burst - several photographs captured in quick succession. </p>
 
 <h1>
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Background</h1>
 
-<p>We are interested in creating an application that can simplify and accelerate the process of selecting the best image from a burst. Specifically, a burst contains a large number of images and it is often cumbersome to sift through all the images to find the best one. Our application aims to detect the images with the highest rate of people with eyes open and smiling. If none of the images completely match all the parameters, then our application will create a composite image i.e. stitching together an image - from the entire library of burst - where everyone is smiling with their eyes open.</p>
+<p>We are interested in creating an application that can simplify and accelerate the process of selecting the best image from a burst. Specifically, a burst contains a large number of images and it is often cumbersome to sift through all the images to find the best one. Our application aims to detect the images with the highest rate of people with eyes open and smiling. We do so by implementing a highly efficient version of the <a href="https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework">Viola-Jones'</a> Face Detection algorithm, as well as parallelizing eye state and smile detection along with simultaneously computing a bunch of images. </p>
 
 <p>A sequential version of the application has several bottlenecks: </p>
 
 <ol>
 <li><p>Serial analysis and execution of each image in the burst will be extremely slow as there is a large number of photographs in burst.  We aim to provide a near real-time solution to the problem. </p></li>
-<li><p>Sequentially analyzing each image for face and eye detection will be extremely slow, and applying a serial vision algorithm to all the images in the burst would take a long time and a lot of processing power. </p></li>
+<li><p>Sequentially analyzing each image for face and eye detection will be extremely slow, and applying a serial vision algorithm to all the images in the burst would take a long time and a lot of processing power. Specifically, the Viola-Jones' algorithm requires excessive computations. </p></li>
 <li><p>Creating the composite image sequentially will be a bottleneck in the runtime of this application. </p></li>
 <li><p>Most importantly, a sequential version of the whole application will not be able to benefit from the machine’s GPU power and will also slow down the CPU as it will perform a lot of tasks on the latter. </p></li>
 </ol>
 
-<p>Therefore, all the aforementioned aspects of the application can be significantly improved from parallelism. We plan to use OpenCL (Android’s version of CUDA) to exploit parallelism in the multi-core chip. The benefits of a parallel application be better understood using the following illustrations highlighting the difference between the sequential and parallel versions.     </p>
+<p>Therefore, all the aforementioned aspects of the application can be significantly improved from parallelism. We plan to use CUDA to exploit parallelism in the multi-core chip. The benefits of a parallel application be better understood using the following illustrations highlighting the difference between the sequential and parallel versions.     </p>
 
 <p><img src="https://41.media.tumblr.com/1270c91a9a7156bc1350a5a6cd1d461b/tumblr_o4z04zwsvR1vqq9vno1_1280.png" alt="Photo Burst"></p>
 
@@ -67,10 +67,10 @@
 <p>The application is challenging in a number of ways: </p>
 
 <ol>
-<li><p>OpenCL is written in C/C++ whereas Android applications are written in Java. As we plan to make our code highly parallelizable to specific machines (fully exploiting our knowledge of the chips), we will have to compile C++ OpenCL code in our Java code.</p></li>
+<li><p>There are a lot of different computationally intensive components associated with the Viola-Jones' algorithm and so parallelizing each one of them and at the same time ensuring accurate face detections will be tricky. </p></li>
 <li><p>As a burst contains a large number of images, there will be a high amount of memory accesses. This implies that a lot will depend on making sure that the computation-to-communication ratio is high. To ensure that the computation-to-communication ratio is high, we will need to handle cache optimizations of image data well in order to achieve maximum cache hits. </p></li>
 <li><p>Efficiently detecting facial features is a lot more than simply sending different parts of the image to different cores; we will have to make sure that distribution of work is even and handle cases that require high computation with more processing power. </p></li>
-<li><p>Stitching together an image will require a lot of inter-communication between processes and more processing power, which means that we will need to dynamically handle parallel processing of the code based not only on the dataset (burst) but also on what the algorithm is working on – eye detection, smile detection, stitching, etc. </p></li>
+<li><p>Such type of application will require a lot of inter-communication between processes and more processing power, which means that we will need to dynamically handle parallel processing of the code based not only on the dataset (burst) but also on what the algorithm is working on – eye detection, smile detection, stitching, etc. </p></li>
 <li><p>During the analysis of each image, our application will perform numerous checks to see if the input meets some requirements. A high number of ‘if’ statements might cause divergent control flow execution, which will need to be handled in way that it does not affect accuracy at the cost of speedup. </p></li>
 </ol>
 
@@ -82,14 +82,15 @@
 <h1>
 <a id="goals-and-deliverables" class="anchor" href="#goals-and-deliverables" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Goals and Deliverables</h1>
 
-<p>We plan to achieve a highly efficient and working Android application fully capable of detecting and creating new images from a burst. We also plan to achieve a high speedup from the sequential versions of Computer Vision algorithms we will use. </p>
+<p>We plan to achieve a highly efficient and working C++ based application fully capable of detecting and creating new images from a burst. We also plan to achieve a high speedup from the sequential versions of Computer Vision algorithms we will use. </p>
 
 <p>We plan to present an interactive demo at the presentation day, running the application live with an existing set of bursts, and showcasing different functionalities of the app. In addition, we also plan to showcase speedup graphs of the parallel version of the application versus the serial version. </p>
 
 <h1>
 <a id="stretch-goal" class="anchor" href="#stretch-goal" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stretch Goal</h1>
 
-<p>We will further try to perform a quick image classification by parallelizing the popular 'Bag of Visual Words' algorithm. This Image classification can then be used to modify heuristics for detecting relevant image features and stitching.</p>
+<p>We will further try to perform a quick image classification by parallelizing the popular 'Bag of Visual Words' algorithm. This Image classification can then be used to modify heuristics for detecting relevant image features and stitching. 
+Additionally, If none of the images completely match all the parameters, then our application will create a composite image i.e. stitching together an image - from the entire library of burst - where everyone is smiling with their eyes open. </p>
 
 <h3>
 <a id="generic-bag-of-visual-words-algorithm" class="anchor" href="#generic-bag-of-visual-words-algorithm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generic 'Bag of Visual Words' Algorithm:</h3>
